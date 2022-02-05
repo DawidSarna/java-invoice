@@ -15,19 +15,17 @@ public abstract class Product {
         this.taxPercent = tax;
     }
 
-    public String getName() {
-        return null;
-    }
+    public String getName() { return this.name; }
 
     public BigDecimal getPrice() {
-        return null;
+        return this.price;
     }
 
     public BigDecimal getTaxPercent() {
-        return null;
+        return this.taxPercent;
     }
 
     public BigDecimal getPriceWithTax() {
-        return null;
+        return this.price.multiply(this.taxPercent).add(this.price);
     }
 }
