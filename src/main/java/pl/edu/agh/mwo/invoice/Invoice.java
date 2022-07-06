@@ -3,10 +3,18 @@ package pl.edu.agh.mwo.invoice;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.LinkedHashMap;
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
     private Map<Product, Integer> products = new HashMap<Product, Integer>();
+    private int invoiceNumber;
+
+    public Invoice(InvoiceRegister.InvoiceToken invoiceToken) {
+        products = new HashMap<>();
+        this.invoiceNumber = invoiceToken.getCurrentInvoiceNumber();
+    }
+
 
     public void addProduct(Product product) {
         addProduct(product, 1);
@@ -39,5 +47,20 @@ public class Invoice {
             totalGross = totalGross.add(product.getPriceWithTax().multiply(quantity));
         }
         return totalGross;
+    }
+
+    public int getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public String print() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(invoiceNumber + "\n");
+        products.entrySet().stream().forEach(item -> sb.append(
+                item.getKey().getName() + " " +
+                        item.getValue() + " " +
+                        item.getKey().getPrice().toString() + "\n"));
+        sb.append("Ilosc unikalnych produktow: " + products.size());
+        return sb.toString();
     }
 }

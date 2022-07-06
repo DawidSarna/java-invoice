@@ -13,12 +13,16 @@ import pl.edu.agh.mwo.invoice.product.OtherProduct;
 import pl.edu.agh.mwo.invoice.product.Product;
 import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
 
+import static org.junit.Assert.*;
+
 public class InvoiceTest {
+    private InvoiceRegister invoiceRegister;
     private Invoice invoice;
 
     @Before
     public void createEmptyInvoiceForTheTest() {
-        invoice = new Invoice();
+        invoiceRegister = new InvoiceRegister();
+        invoice = invoiceRegister.createInvoice();
     }
 
     @Test
@@ -124,5 +128,37 @@ public class InvoiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddingNullProduct() {
         invoice.addProduct(null);
+    }
+
+    @Test
+    public void invoiceNumberHaveToBePositive(){
+        assertTrue(invoice.getInvoiceNumber() > 0);
+    }
+
+    @Test
+    public void printInvoiceFirstLineNumber(){
+        assertEquals("1",invoice.print().split("\n")[0]);
+    }
+
+    @Test
+    public void printInvoiceSecondLineProduct(){
+        invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
+        assertEquals("piwko 2 2.50",invoice.print().split("\n")[1]);
+    }
+
+    @Test
+    public void printInvoiceEndAsSumOfProducts(){
+        invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
+        invoice.addProduct(new OtherProduct("papieroski", new BigDecimal("15.00")),1);
+        invoice.addProduct(new OtherProduct("kinder niespodzianka", new BigDecimal("3.60")),4);
+        assertEquals("Ilosc unikalnych produktow: 3",invoice.print().split("\n")[4]);
+    }
+
+    @Test
+    public void printInvoiceThirdProduct(){
+        invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
+        invoice.addProduct(new OtherProduct("papieroski", new BigDecimal("15.00")),1);
+        invoice.addProduct(new OtherProduct("kinder niespodzianka", new BigDecimal("3.60")),4);
+        assertEquals("kinder niespodzianka 4 3.60",invoice.print().split("\n")[1]);
     }
 }
