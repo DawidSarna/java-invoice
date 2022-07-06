@@ -16,5 +16,15 @@ jobs:
           distribution: 'adopt'
       - name: Test
         run: mvn test
-      - name: CheckStyle
-        run: mvn checkstyle:check
+  checkstyle:
+    name: Checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '15'
+          distribution: 'adopt'
+      - name: checkstyle
+        run: mvn checkstyle:checkstyle
