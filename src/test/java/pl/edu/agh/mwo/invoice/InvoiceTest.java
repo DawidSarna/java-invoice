@@ -6,14 +6,13 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import pl.edu.agh.mwo.invoice.Invoice;
 import pl.edu.agh.mwo.invoice.product.DairyProduct;
 import pl.edu.agh.mwo.invoice.product.OtherProduct;
 import pl.edu.agh.mwo.invoice.product.Product;
 import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
-
-import static org.junit.Assert.*;
 
 public class InvoiceTest {
     private InvoiceRegister invoiceRegister;
@@ -131,23 +130,23 @@ public class InvoiceTest {
     }
 
     @Test
-    public void invoiceNumberHaveToBePositive(){
+    public void invoiceNumberHaveToBePositive() {
         assertTrue(invoice.getInvoiceNumber() > 0);
     }
 
     @Test
-    public void printInvoiceFirstLineNumber(){
+    public void printInvoiceFirstLineNumber() {
         assertEquals("1",invoice.print().split("\n")[0]);
     }
 
     @Test
-    public void printInvoiceSecondLineProduct(){
+    public void printInvoiceSecondLineProduct() {
         invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
-        assertEquals("piwko 2 2.50",invoice.print().split("\n")[1]);
+        assertEquals("piwko ilosc:2 cena:2.50",invoice.print().split("\n")[1]);
     }
 
     @Test
-    public void printInvoiceEndAsSumOfProducts(){
+    public void printInvoiceEndAsSumOfProducts() {
         invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
         invoice.addProduct(new OtherProduct("papieroski", new BigDecimal("15.00")),1);
         invoice.addProduct(new OtherProduct("kinder niespodzianka", new BigDecimal("3.60")),4);
@@ -155,10 +154,10 @@ public class InvoiceTest {
     }
 
     @Test
-    public void printInvoiceThirdProduct(){
+    public void printInvoiceThirdProduct() {
         invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
         invoice.addProduct(new OtherProduct("papieroski", new BigDecimal("15.00")),1);
         invoice.addProduct(new OtherProduct("kinder niespodzianka", new BigDecimal("3.60")),4);
-        assertEquals("kinder niespodzianka 4 3.60",invoice.print().split("\n")[1]);
+        assertEquals("kinder niespodzianka ilosc:4 cena:3.60",invoice.print().split("\n")[3]);
     }
 }

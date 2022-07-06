@@ -2,8 +2,8 @@ package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
@@ -11,10 +11,9 @@ public class Invoice {
     private int invoiceNumber;
 
     public Invoice(InvoiceRegister.InvoiceToken invoiceToken) {
-        products = new HashMap<>();
+        products = new LinkedHashMap<>();
         this.invoiceNumber = invoiceToken.getCurrentInvoiceNumber();
     }
-
 
     public void addProduct(Product product) {
         addProduct(product, 1);
@@ -57,8 +56,8 @@ public class Invoice {
         StringBuilder sb = new StringBuilder();
         sb.append(invoiceNumber + "\n");
         products.entrySet().stream().forEach(item -> sb.append(
-                item.getKey().getName() + " " +
-                        item.getValue() + " " +
+                item.getKey().getName() + " ilosc:" +
+                        item.getValue() + " cena:" +
                         item.getKey().getPrice().toString() + "\n"));
         sb.append("Ilosc unikalnych produktow: " + products.size());
         return sb.toString();
