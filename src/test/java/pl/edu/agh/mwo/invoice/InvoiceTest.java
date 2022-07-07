@@ -141,13 +141,13 @@ public class InvoiceTest {
 
     @Test
     public void printInvoiceSecondLineProduct() {
-        invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
+        invoice.addProduct(new OtherProduct("piwko", new BigDecimal("2.50")),2);
         assertEquals("piwko ilosc:2 cena:2.50",invoice.print().split("\n")[1]);
     }
 
     @Test
     public void printInvoiceEndAsSumOfProducts() {
-        invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
+        invoice.addProduct(new OtherProduct("piwko", new BigDecimal("2.50")),2);
         invoice.addProduct(new OtherProduct("papieroski", new BigDecimal("15.00")),1);
         invoice.addProduct(new OtherProduct("kinder niespodzianka", new BigDecimal("3.60")),4);
         assertEquals("Ilosc unikalnych produktow: 3",invoice.print().split("\n")[4]);
@@ -155,9 +155,23 @@ public class InvoiceTest {
 
     @Test
     public void printInvoiceThirdProduct() {
-        invoice.addProduct(new DairyProduct("piwko", new BigDecimal("2.50")),2);
+        invoice.addProduct(new OtherProduct("piwko", new BigDecimal("2.50")),2);
         invoice.addProduct(new OtherProduct("papieroski", new BigDecimal("15.00")),1);
         invoice.addProduct(new OtherProduct("kinder niespodzianka", new BigDecimal("3.60")),4);
         assertEquals("kinder niespodzianka ilosc:4 cena:3.60",invoice.print().split("\n")[3]);
+    }
+
+    @Test
+    public void printInvoiceSameProductsOneUnical() {
+        invoice.addProduct(new OtherProduct("piwko", new BigDecimal("2.50")),8);
+        invoice.addProduct(new OtherProduct("piwko", new BigDecimal("2.50")),8);
+        assertEquals("Ilosc unikalnych produktow: 1", invoice.print().split("\n")[2]);
+    }
+
+    @Test
+    public void printInvoiceSameProductsSubstract(){
+        invoice.addProduct(new OtherProduct("piwko", new BigDecimal("2.50")),8);
+        invoice.addProduct(new OtherProduct("piwko", new BigDecimal("2.50")),8);
+        assertEquals("piwko ilosc:16 cena:2.50",invoice.print().split("\n")[1]);
     }
 }
