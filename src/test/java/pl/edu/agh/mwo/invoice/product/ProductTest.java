@@ -6,8 +6,6 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.product.Product;
-
 public class ProductTest {
     @Test
     public void testProductNameIsCorrect() {
@@ -53,5 +51,29 @@ public class ProductTest {
     @Test(expected = IllegalArgumentException.class)
     public void testProductWithNegativePrice() {
         new TaxFreeProduct("Mandarynki", new BigDecimal("-1.00"));
+    }
+
+    @Test
+    public void wineFlatPrice(){
+        Product p = new BottleOfWine("Martini", new BigDecimal("30.00"));
+        Assert.assertThat(new BigDecimal("30.00"), Matchers.comparesEqualTo(p.getPrice()));
+    }
+
+    @Test
+    public void wineWithTax(){
+        Product p = new BottleOfWine("Martini", new BigDecimal("30.00"));
+        Assert.assertThat(new BigDecimal("35.56"), Matchers.equalTo(p.getPriceWithTax()));
+    }
+
+    @Test
+    public void fuelCarnisterFlatPrice(){
+        Product p = new FuelCanister("Kanister PB95", new BigDecimal("180"));
+        Assert.assertThat(new BigDecimal("180"), Matchers.comparesEqualTo(p.getPrice()));
+    }
+
+    @Test
+    public void fuelCarnisterWithTax(){
+        Product p = new FuelCanister("Kanister PB95", new BigDecimal("180"));
+        Assert.assertThat(new BigDecimal("185.56"), Matchers.equalTo(p.getPriceWithTax()));
     }
 }

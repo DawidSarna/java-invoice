@@ -1,18 +1,23 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import pl.edu.agh.mwo.invoice.product.FuelCanister;
 import pl.edu.agh.mwo.invoice.product.Product;
+import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
 
 public class Invoice {
-    private Map<Product, Integer> products = new HashMap<Product, Integer>();
+    private final LocalDate date;
+    private Map<Product, Integer> products;
     private int invoiceNumber;
 
-    public Invoice(InvoiceRegister.InvoiceToken invoiceToken) {
+    public Invoice(InvoiceRegister.InvoiceToken invoiceToken, LocalDate date) {
         products = new LinkedHashMap<>();
         this.invoiceNumber = invoiceToken.getCurrentInvoiceNumber();
+        this.date = date;
     }
 
     public void addProduct(Product product) {
@@ -23,10 +28,12 @@ public class Invoice {
         if (product == null || quantity <= 0) {
             throw new IllegalArgumentException();
         }
-        if(products.containsKey(product)){
-            products.put(product, products.get(product) + quantity);
+        if (product instanceof FuelCanister && new CarpenterDay().isCarpenterDay(date)) {
+            product = new TaxFreeProduct(product.getName(), product.getPrice());
         }
-        else {
+        if (products.containsKey(product)) {
+            products.put(product, products.get(product) + quantity);
+        } else {
             products.put(product, quantity);
         }
     }
@@ -61,9 +68,7 @@ public class Invoice {
         StringBuilder sb = new StringBuilder();
         sb.append(invoiceNumber + "\n");
         products.entrySet().stream().forEach(item -> sb.append(
-                item.getKey().getName() + " ilosc:" +
-                        item.getValue() + " cena:" +
-                        item.getKey().getPrice().toString() + "\n"));
+                item.getKey().getName() + " ilosc:" + item.getValue() + " cena:" + item.getKey().getPrice().toString() + "\n"));
         sb.append("Ilosc unikalnych produktow: " + products.size());
         return sb.toString();
     }
